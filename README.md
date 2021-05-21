@@ -1,4 +1,4 @@
-# terraform-aws-terraform-azure-devops-self-hosted-agent-on-aws
+# terraform-azure-devops-self-hosted-agent-on-aws
 
 [![Lint Status](https://github.com/DNXLabs/terraform-aws-template/workflows/Lint/badge.svg)](https://github.com/DNXLabs/terraform-aws-template/actions)
 [![LICENSE](https://img.shields.io/github/license/DNXLabs/terraform-aws-template)](https://github.com/DNXLabs/terraform-aws-template/blob/master/LICENSE)
