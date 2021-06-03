@@ -19,13 +19,13 @@ resource "aws_security_group_rule" "default_ingress" {
 }
 
 resource "aws_security_group_rule" "ssh_ingress" {
-  description              = "SSH Ingress"
-  type                     = "ingress"
-  from_port                = 22
-  to_port                  = 22
-  protocol                 = "-1"
-  cidr_blocks              = var.sg_cidr_blocks
-  security_group_id        = aws_security_group.default.id
+  description       = "SSH Ingress"
+  type              = "ingress"
+  from_port         = 22
+  to_port           = 22
+  protocol          = "-1"
+  cidr_blocks       = var.sg_cidr_blocks
+  security_group_id = aws_security_group.default.id
 }
 
 resource "aws_security_group_rule" "default_egress" {

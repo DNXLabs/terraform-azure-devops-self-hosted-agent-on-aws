@@ -13,18 +13,18 @@ variable "vpc_id" {
 
 variable "sg_cidr_blocks" {
   description = "List of cidr blocks for SSH access to the build agents"
-  type        = list
+  type        = list(any)
   default     = [""]
 }
 
 variable "security_group_ids" {
-  type        = list
+  type        = list(any)
   default     = []
   description = "Extra security groups for instances"
 }
 
 variable "instances_subnet" {
-  type        = list
+  type        = list(any)
   description = "List of private subnet IDs for EC2 instances"
 }
 
