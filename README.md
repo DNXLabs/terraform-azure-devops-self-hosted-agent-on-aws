@@ -32,11 +32,11 @@
 | dotnet\_sdk\_version | Dotnet sdk version to be pre-installed into the agents | `string` | `"3.1"` | no |
 | ebs\_size | EBS size in GB for agent instances | `number` | `32` | no |
 | instance\_type | EC2 instance type | `string` | `"t3.small"` | no |
-| instances\_subnet | List of private subnet IDs for EC2 instances | `list` | n/a | yes |
+| instances\_subnet | List of private subnet IDs for EC2 instances | `list(any)` | n/a | yes |
 | key\_name | Key-Pair name for access into the agent instances | `string` | n/a | yes |
 | name | Name of this EC2 cluster | `any` | n/a | yes |
-| security\_group\_ids | Extra security groups for instances | `list` | `[]` | no |
-| sg\_cidr\_blocks | List of cidr blocks for SSH access to the build agents | `list` | <pre>[<br>  ""<br>]</pre> | no |
+| security\_group\_ids | Extra security groups for instances | `list(any)` | `[]` | no |
+| sg\_cidr\_blocks | List of cidr blocks for SSH access to the build agents | `list(any)` | <pre>[<br>  ""<br>]</pre> | no |
 | vpc\_id | VPC id for the instances | `string` | n/a | yes |
 
 ## Outputs
