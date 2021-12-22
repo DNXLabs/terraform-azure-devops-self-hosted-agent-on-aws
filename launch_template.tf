@@ -42,7 +42,7 @@ resource "aws_launch_template" "default" {
 
   vpc_security_group_ids = concat(list(aws_security_group.default.id), var.security_group_ids)
 
-  user_data = base64encode(templatefile("${path.module}/userdata.tpl", { url = "${var.azuredevops_url}", token = "${var.azuredevops_token}", pool = "${var.azuredevops_pool}", dotnet_sdk_version = "${var.dotnet_sdk_version}" }))
+  user_data = base64encode(templatefile("${path.module}/../../../userdata-az-selfhosted.tpl", { url = "${var.azuredevops_url}", token = "${var.azuredevops_token}", pool = "${var.azuredevops_pool}", dotnet_sdk_version = "${var.dotnet_sdk_version}" }))
 
 
   lifecycle {
