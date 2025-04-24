@@ -20,3 +20,4 @@ locals {
     # Default AWS region for this deployment
     region = "ap-southeast-2" 
 }
+}
