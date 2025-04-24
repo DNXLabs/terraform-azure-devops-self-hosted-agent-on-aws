@@ -1,14 +1,9 @@
 data "aws_region" "current" {}
 data "aws_caller_identity" "current" {}
 
-# Use AWS public provided SSM parameter to get the latest Amazon Linux 2 AMI ID
-locals {
-  al2_ami_ssm_parameter_name = "/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2"
-}
-
 # Use the aws_ssm_parameter data source to get the latest AL2 AMI ID
 data "aws_ssm_parameter" "amazon_linux_2" {
-  name = local.al2_ami_ssm_parameter_name
+  name = var.al2_ami_ssm_parameter_name
 }
 
 data "aws_autoscaling_groups" "groups" {

@@ -45,6 +45,12 @@ variable "instance_type" {
   default     = "t3.micro" 
 }
 
+variable "al2_ami_ssm_parameter_name" {
+  description = "value of the SSM parameter name for the latest Amazon Linux 2 AMI ID."
+  type        = string
+  default     = "/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2"
+}
+
 variable "ebs_volume_size" {
   description = "Size in GB for the root EBS volume of the agent instances."
   type        = number
@@ -55,6 +61,7 @@ variable "ebs_volume_size" {
     error_message = "EBS volume size must be greater than 0."
   }
 }
+
 variable "ebs_volume_type" {
   description = "Type of EBS volume for the agent instances. Common types are 'gp2', 'gp3', 'io1', 'io2', 'st1', 'sc1'."
   type        = string
