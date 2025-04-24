@@ -1,7 +1,7 @@
 data "aws_region" "current" {}
 data "aws_caller_identity" "current" {}
 
-# Use x86_64 architecture for AMI selection
+# Use AWS public provided SSM parameter to get the latest Amazon Linux 2 AMI ID
 locals {
   al2_ami_ssm_parameter_name = "/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2"
 }
