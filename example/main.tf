@@ -1,17 +1,68 @@
+### This is an example of how to use the DNXLabs Azure DevOps Self-Hosted Agent on AWS module.
+
 module "agent_provider" {
-  source             = "git::https://github.com/DNXLabs/terraform-azure-devops-self-hosted-agent-on-aws.git?ref=0.1.0"
-  cluster_name       = "azure-devops-self-hosted-agent-on-aws"
-  name               = "azure-devops"
-  vpc_id             = "vpc-XXXXXX"
-  instances_subnet   = ["subnet-XXXXXXX", "subnet-XXXXXXX", "subnet-XXXXXXX"]
-  azuredevops_url    = "https://dev.azure.com/XXXXXXXX"
-  azuredevops_token  = "XXXXXXXXXXXXXXXXXXXXX"
-  azuredevops_pool   = "aws_hosted"
-  key_name           = "aws_key_name"
-  instance_type      = "t3.small"
-  asg_max_size       = 2
-  asg_min_size       = 2
-  asg_desired_size   = 2
-  dotnet_sdk_version = "2.2"
-  sg_cidr_blocks     = ["XXX.XXX.XX.XXX/XX"]
+  source = "git::https://github.com/DNXLabs/terraform-azure-devops-self-hosted-agent-on-aws.git?ref=1.0.0" #TODO: Replace with the correct version or branch of the module
+  
+  #--------------------------------------------------------------
+  # General Configuration
+  #--------------------------------------------------------------
+  cluster_name = "azure-devops-self-hosted-agent-on-aws"
+  name         = "azure-devops"
+  
+  #--------------------------------------------------------------
+  # Network Configuration
+  #--------------------------------------------------------------
+  vpc_id              = "vpc-XXXXXX"
+  instances_subnet_ids = ["subnet-XXXXXXX", "subnet-XXXXXXX", "subnet-XXXXXXX"]
+  
+  #--------------------------------------------------------------
+  # Azure DevOps Configuration
+  #--------------------------------------------------------------
+  azuredevops_url           = "https://dev.azure.com/XXXXXXXX"
+  azuredevops_token         = "XXXXXXXXXXXXXXXXXXXXX"
+  azuredevops_pool          = "aws_hosted"
+  azure_devops_agent_version = "4.254.0" # Version of the Azure DevOps agent to install
+  
+  #--------------------------------------------------------------
+  # Instance Configuration 
+  #--------------------------------------------------------------
+  instance_type        = "t3.small" # Must be x64 compatible
+  
+  #--------------------------------------------------------------
+  # Auto Scaling Group Configuration
+  #--------------------------------------------------------------
+  asg_max_size     = 1
+  asg_min_size     = 1
+  asg_desired_size = 1
+  
+  #--------------------------------------------------------------
+  # Storage Configuration
+  #--------------------------------------------------------------
+  ebs_volume_size  = 32  # Size in GB for the root EBS volume
+  ebs_volume_type  = "gp3" # EBS volume type (gp2, gp3, io1, io2, st1, sc1)
+  ebs_volume_iops  = 3000 # IOPS for the EBS volume
+  
+  #--------------------------------------------------------------
+  # Development Tools Configuration
+  #--------------------------------------------------------------
+  install_dotnet_sdk = false
+  dotnet_sdk_version = "" # .NET SDK version to be pre-installed
+  
+  #--------------------------------------------------------------
+  # Additional Configuration
+  #--------------------------------------------------------------
+  attach_security_group_ids = [] # List of additional Security Group IDs to attach
+  tags = {
+    Environment = "example"
+  }
+
+  #--------------------------------------------------------------
+  # SSH Access Configuration (Optional)
+  #--------------------------------------------------------------
+  # Uncomment and configure the following lines to enable SSH access
+  # enable_ssh_access = true
+  # ssh_cidr_blocks   = ["10.0.0.0/16", "192.168.1.0/24"] # List of CIDR blocks allowed to SSH
+  # ssh_key_name      = null # Set to an existing key pair name or leave as null to generate a new key
+  # generate_ssh_key  = true # Whether to generate a new key pair if ssh_key_name is null
+
 }

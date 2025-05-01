@@ -1,18 +1,9 @@
 data "aws_region" "current" {}
+data "aws_caller_identity" "current" {}
 
-data "aws_ami" "amazon-linux-2" {
-  most_recent = true
-  owners      = ["amazon"]
-
-  filter {
-    name   = "name"
-    values = ["amzn2-ami-hvm*"]
-  }
-
-  filter {
-    name   = "architecture"
-    values = ["x86_64"]
-  }
+# Use the aws_ssm_parameter data source to get the latest AL2 AMI ID
+data "aws_ssm_parameter" "amazon_linux_2" {
+  name = var.al2_ami_ssm_parameter_name
 }
 
 data "aws_autoscaling_groups" "groups" {

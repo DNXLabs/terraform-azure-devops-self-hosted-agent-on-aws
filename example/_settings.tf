@@ -1,18 +1,23 @@
-provider "aws" {
-  region  = local.workspace["region"]
-  version = "3.42.0"
+terraform {
+  required_version = ">= 1.3" 
 
-  assume_role {
-    role_arn = "arn:aws:iam::${local.workspace["aws"]["account_id"]}:role/${local.workspace["aws"]["role"]}"
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.0"
+    }
   }
 }
 
+# Default AWS provider using the region from local.workspace
 provider "aws" {
-  alias   = "us-east-1"
-  region  = "us-east-1"
-  version = "3.42.0"
+  region = local.workspace["region"]
+}
 
-  assume_role {
-    role_arn = "arn:aws:iam::${local.workspace["aws"]["account_id"]}:role/${local.workspace["aws"]["role"]}"
-  }
+locals {
+  # Workspace-specific configuration values
+  workspace = {
+    # Default AWS region for this deployment
+    region = "ap-southeast-2" 
+}
 }
