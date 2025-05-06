@@ -44,6 +44,10 @@ resource "aws_launch_template" "agent_lt" {
     azure_devops_agent_version = var.azure_devops_agent_version,
     cluster_name               = var.cluster_name,
     name                       = var.name
+    install_docker             = var.install_docker,
+    docker_user_groups         = var.docker_user_groups,
+    docker_restart_instance    = var.docker_restart_instance,
+    docker_security_acknowledgment = var.docker_security_acknowledgment
   }))
 
   tags = merge(var.tags, {
