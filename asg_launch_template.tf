@@ -57,7 +57,7 @@ resource "aws_launch_template" "agent_lt" {
   tag_specifications {
     resource_type = "instance"
     tags = merge(var.tags, {
-      Name         = "${var.name}-agent-instance-${var.cluster_name}"
+      Name         = "${var.name}-agent-${var.cluster_name}"
       Cluster      = var.cluster_name
       Architecture = "x64"
     })
@@ -94,7 +94,7 @@ resource "aws_autoscaling_group" "agent_asg" {
 
   dynamic "tag" {
     for_each = merge(var.tags, {
-      Name         = "${var.name}-agent-instance-${var.cluster_name}",
+      Name         = "${var.name}-agent-${var.cluster_name}",
       Cluster      = var.cluster_name,
       Architecture = "x64"
     })

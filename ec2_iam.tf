@@ -70,11 +70,11 @@ resource "aws_iam_role" "agent_role" {
 }
 
 resource "aws_iam_instance_profile" "agent_profile" {
-  name = "${var.name}-agent-profile-${data.aws_region.current.name}"
+  name = "${var.name}-agent-${data.aws_region.current.name}"
   role = aws_iam_role.agent_role.name
 
   tags = merge(var.tags, {
-    Name = "${var.name}-agent-profile-${var.cluster_name}"
+    Name = "${var.name}-agent-${var.cluster_name}"
   })
 }
 
