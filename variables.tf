@@ -127,6 +127,35 @@ variable "install_dotnet_sdk" {
   default     = true
 }
 
+variable "install_docker" {
+  description = "Whether to install Docker on the agent instances. If false, Docker will not be installed."
+  type        = bool
+  default     = false
+}
+
+variable "docker_user_groups" {
+  description = "List of users to add to the docker group. Default is ['ec2-user']."
+  type        = list(string)
+  default     = ["ec2-user"]
+}
+
+variable "docker_restart_instance" {
+  description = "Whether to restart the instance after Docker installation to ensure group membership changes take effect. Only used when install_docker is true."
+  type        = bool
+  default     = false
+}
+
+variable "docker_security_acknowledgment" {
+  description = "Set to 'I understand the security implications' to acknowledge that users in the docker group effectively have root privileges."
+  type        = string
+  default     = null
+
+  validation {
+    condition     = !var.install_docker || var.docker_security_acknowledgment == "I understand the security implications"
+    error_message = "When enabling Docker, you must set docker_security_acknowledgment to 'I understand the security implications' to acknowledge security implications."
+  }
+}
+
 variable "azure_devops_agent_version" {
   description = "Version of the Azure DevOps agent to install (e.g., '4.254.0'). Find versions at https://github.com/microsoft/azure-pipelines-agent/releases"
   type        = string

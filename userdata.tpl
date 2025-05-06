@@ -40,6 +40,40 @@ else
   echo ".NET SDK installation skipped."
 fi
 
+# --- Docker Installation (optional) ---
+if [ "${install_docker}" = "true" ]; then
+  echo "Checking for Docker installation..."
+  if command -v docker &> /dev/null; then
+    echo "Docker is already installed. Version: $(docker --version)"
+  else
+    echo "Installing Docker..."
+    sudo yum update -y
+    sudo amazon-linux-extras install docker -y || { echo "Failed to install Docker"; exit 1; }
+    sudo systemctl start docker || { echo "Failed to start Docker service"; exit 1; }
+    sudo systemctl enable docker || { echo "Failed to enable Docker service"; exit 1; }
+    echo "Docker installed successfully. Version: $(docker --version)"
+  fi
+  
+  # Add specified users to the docker group
+  for user in ${jsonencode(docker_user_groups)}; do
+    # Remove quotes and brackets from the rendered JSON array
+    clean_user=$(echo "$user" | sed 's/[][]//g' | sed 's/"//g' | sed 's/,//g')
+    echo "Adding $clean_user to the docker group..."
+    sudo usermod -aG docker $clean_user || { echo "Failed to add $clean_user to docker group"; exit 1; }
+  done
+  
+  echo "Note: Users may need to log out and back in for group changes to take effect"
+  
+  # Optionally restart the instance to apply group changes
+  if [ "${docker_restart_instance}" = "true" ]; then
+    echo "Scheduling instance restart to apply Docker group membership changes..."
+    # Schedule a reboot in 1 minute to allow the script to complete
+    sudo shutdown -r +1 "Rebooting to apply Docker group membership changes"
+  fi
+else
+  echo "Docker installation skipped."
+fi
+
 # Create agent directory
 # Use the shell variable defined above
 echo "Setting up Azure DevOps Agent ${azure_devops_agent_version} for $TARGET_ARCHITECTURE..."
