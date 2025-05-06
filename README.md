@@ -10,6 +10,7 @@ This module is designed to simplify the deployment of Azure DevOps agents on AWS
 -   Creates EC2 instances within an Auto Scaling Group.
 -   Supports **x64 (Intel/AMD)** architecture.
 -   Configurable Azure DevOps agent version and .NET SDK version.
+-   Optional Docker installation with security controls.
 -   Uses **AWS Systems Manager Session Manager** for secure instance access by default.
 -   Optional SSH access with configurable CIDR blocks and key pairs.
 -   Installs and configures the CloudWatch agent for logs and basic metrics.
@@ -81,6 +82,14 @@ module "azure_devops_agent" {
   dotnet_sdk_version = "6.0" # .NET SDK version to be pre-installed
   
   #--------------------------------------------------------------
+  # Docker Configuration (Optional)
+  #--------------------------------------------------------------
+  install_docker = true # Set to true to install Docker
+  docker_user_groups = ["ec2-user"] # List of users to add to the docker group
+  docker_restart_instance = true # Whether to restart the instance after Docker installation
+  docker_security_acknowledgment = "I understand the security implications" # Required when install_docker is true
+  
+  #--------------------------------------------------------------
   # Additional Configuration
   #--------------------------------------------------------------
   attach_security_group_ids = [] # List of additional Security Group IDs to attach
@@ -148,6 +157,34 @@ Then connect to your instance:
 ssh -i my-key.pem ec2-user@<instance-ip>
 ```
 
+## Docker Support (Optional)
+
+You can optionally install Docker on the agent instances by configuring the following variables:
+
+```hcl
+module "azure_devops_agent" {
+  # ... other configuration ...
+  
+  # Docker Configuration
+  install_docker = true
+  docker_user_groups = ["ec2-user"] # Users to add to the docker group
+  docker_restart_instance = true # Restart to apply group membership changes
+  docker_security_acknowledgment = "I understand the security implications"
+}
+```
+
+### Security Implications
+
+When enabling Docker, you must explicitly acknowledge the security implications by setting `docker_security_acknowledgment = "I understand the security implications"`. This is because:
+
+1. **Elevated Privileges**: Users in the docker group effectively have root privileges on the system, as they can run containers with root access to the host.
+2. **Container Escape**: Malicious code in containers could potentially escape and affect the host system.
+3. **Resource Control**: Docker containers can consume significant system resources if not properly constrained.
+
+### Group Membership
+
+When users are added to the docker group, they need to log out and back in for the changes to take effect. In the context of the Azure DevOps agent service, this may require a restart of the instance or the agent service. The `docker_restart_instance` option can be set to `true` to automatically schedule a restart after Docker installation.
+
 ## Monitoring
 
 -   **Agent Logs:** View agent diagnostic logs in CloudWatch Logs under the log group `/azure-devops-agent/<cluster_name>/<name>/agent-diag`.
@@ -174,6 +211,10 @@ ssh -i my-key.pem ec2-user@<instance-ip>
 | `asg_desired_size`         | Desired number of instances in ASG.                                                                                                    | `number`      | `1`         |    no    |
 | `dotnet_sdk_version`       | Full .NET SDK version to install (e.g., '6.0').                                                                                        | `string`      | `"6.0"`     |    no    |
 | `install_dotnet_sdk`       | Whether to install the .NET SDK on the agent instances. If false, .NET will not be installed.                                          | `bool`        | `true`      |    no    |
+| `install_docker`           | Whether to install Docker on the agent instances. If false, Docker will not be installed.                                              | `bool`        | `false`     |    no    |
+| `docker_user_groups`       | List of users to add to the docker group. Default is ['ec2-user'].                                                                     | `list(string)`| `["ec2-user"]` |    no    |
+| `docker_restart_instance`  | Whether to restart the instance after Docker installation to ensure group membership changes take effect.                              | `bool`        | `false`     |    no    |
+| `docker_security_acknowledgment` | Set to 'I understand the security implications' to acknowledge that users in the docker group effectively have root privileges.   | `string`      | `null`      |    no    |
 | `azure_devops_agent_version` | Azure DevOps agent version (e.g., '4.254.0').                                                                                        | `string`      | `"4.254.0"` |    no    |
 | `attach_security_group_ids`| List of additional Security Group IDs to attach.                                                                                       | `list(string)`| `[]`        |    no    |
 | `tags`                     | Map of additional tags for resources.                                                                                                  | `map(string)` | `{}`        |    no    |
