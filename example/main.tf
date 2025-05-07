@@ -56,7 +56,7 @@ module "agent_provider" {
   # docker_user_groups = ["ec2-user"] # List of users to add to the docker group
   # docker_restart_instance = true # Whether to restart the instance after Docker installation
   # docker_security_acknowledgment = "I understand the security implications" # Required when install_docker is true
-  # metadata_http_put_response_hop_limit = 2 # Default is 2, which is sufficient for Docker to access instance metadata
+  # metadata_http_put_response_hop_limit = 2 # Set to 2 or higher when using Docker to allow containers to access instance metadata
   
   #--------------------------------------------------------------
   # Additional Configuration

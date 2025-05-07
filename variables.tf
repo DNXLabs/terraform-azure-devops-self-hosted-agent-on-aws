@@ -157,9 +157,9 @@ variable "docker_security_acknowledgment" {
 }
 
 variable "metadata_http_put_response_hop_limit" {
-  description = "The desired HTTP PUT response hop limit for instance metadata requests. The larger the number, the further instance metadata requests can travel. Required when using Docker to access instance metadata."
+  description = "The desired HTTP PUT response hop limit for instance metadata requests. The larger the number, the further instance metadata requests can travel. Default is 1 (most secure). For Docker containers to access instance metadata, a minimum of 2 is required. For docker-in-docker scenarios, 3 or higher might be needed."
   type        = number
-  default     = 2
+  default     = 1
 }
 
 variable "azure_devops_agent_version" {
