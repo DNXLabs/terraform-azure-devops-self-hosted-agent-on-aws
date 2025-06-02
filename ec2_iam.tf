@@ -89,3 +89,9 @@ resource "aws_iam_role_policy_attachment" "cloudwatch_agent" {
   role       = aws_iam_role.agent_role.name
   policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
 }
+
+# Required policy for Secret Manager
+resource "aws_iam_role_policy_attachment" "secretmanager_core" {
+  role       = aws_iam_role.agent_role.name
+  policy_arn = "arn:aws:iam::aws:policy/SecretsManagerReadWrite"
+}
